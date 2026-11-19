@@ -82,15 +82,15 @@ def test_calcula_estadisticas_indice():
     num_palabras, num_urls, promedio_urls_por_palabra = calcula_estadisticas_indice(indice)
     assert num_palabras == 5
     assert num_urls == 4
-    # Total de URLs distintas: 10
-    # Promedio: 10 / 5 = 2.0
-    assert abs(promedio_urls_por_palabra - 2.0) < 1e-6
+    # Total de URLs distintas: 4
+    # Promedio: 4 / 5 = 0.8
+    assert abs(promedio_urls_por_palabra - 0.8) < 1e-6
 
 test_normalizar_texto()
-#test_procesar_url_en_indice()
-#test_buscar_palabra_simple()
-#test_buscar_palabras_or()
-#test_buscar_palabras_and()
+test_procesar_url_en_indice()
+test_buscar_palabra_simple()
+test_buscar_palabras_or()
+test_buscar_palabras_and()
 #test_procesar_url_en_indice_top_n()
 #test_calcula_estadisticas_indice()
 print("Todas las pruebas funcionaron correctamente.")

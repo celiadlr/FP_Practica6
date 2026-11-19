@@ -22,10 +22,21 @@ def normalizar_texto(texto: str) -> list[str]:
     Devuelve:
     list[str]: Una lista de palabras normalizadas.
     """    
-    #TODO: Ejercicio 1
-    pass
+    res=[]
+    texto=texto.lower()
+    for c in texto:
+        if c in PUNTUACION:
+            texto=texto.replace(c,' ')
 
-def procesar_url_en_indice(url: str, texto: str, indice: dict[str, set[str]]):
+    palabras=texto.split()
+
+    for palabra in palabras:
+        if palabra not in STOP_WORDS and palabra.isalpha():
+            res.append(palabra)
+    return res
+    
+
+def procesar_url_en_indice(url: str, texto: str, indice: dict[str, set[str]])->None:
     """
     Recibe la URL, el texto ya extraído de esa URL y un diccionario que indexa
     URLs de páginas web usando las palabras contenidas en la web como clave.
@@ -37,8 +48,12 @@ def procesar_url_en_indice(url: str, texto: str, indice: dict[str, set[str]]):
     texto (str): El texto extraído de la página web.
     indice (dict[str, set[str]]): El índice de búsqueda a actualizar.
     """
-    # TODO: Ejercicio 2
-    pass
+    texto_limpio=normalizar_texto(texto)
+    res=[]
+    for p in texto_limpio:
+        if p not in indice:
+            indice [p]= set()
+        indice[p].add(url)
 
 
 def buscar_palabra_simple(palabra: str, indice: dict[str, set[str]]) -> set[str]:
@@ -55,8 +70,13 @@ def buscar_palabra_simple(palabra: str, indice: dict[str, set[str]]) -> set[str]
     Devuelve:
     set[str]: Un conjunto de URLs donde se encontró la palabra.
     """    
-    # TODO: Ejercicio 3
-    return set()
+    limpio=normalizar_texto(palabra)
+    
+    if limpio[0] not in indice:
+        return set()
+    return indice[limpio[0]]
+
+    
 
 def buscar_palabras_or(frase: str, indice: dict[str, set[str]]) -> set[str]:
     """
@@ -72,8 +92,15 @@ def buscar_palabras_or(frase: str, indice: dict[str, set[str]]) -> set[str]:
     Devuelve:
     set[str]: Un conjunto de URLs donde se encontraron todas las palabras.
     """    
-    # TODO: Ejercicio 4
-    pass
+    frase=normalizar_texto(frase)
+    res=set()
+    for p in frase:
+        palabra= buscar_palabra_simple(p,indice)
+        res.update(palabra)
+
+    return res 
+
+    
 
 
 def buscar_palabras_and(frase: str, indice: dict[str, set[str]]) -> set[str]:
@@ -90,9 +117,17 @@ def buscar_palabras_and(frase: str, indice: dict[str, set[str]]) -> set[str]:
     Devuelve:
     set[str]: Un conjunto de URLs donde se encontraron todas las palabras.
     """
-    # TODO: Ejercicio 5
-    return set()
+    frase=normalizar_texto(frase)
+    res=[]
+    if len(frase)==0:
+        return set()
+    
+    primera= buscar_palabra_simple(indice)
 
+    for i in frase[1:]:
+        actual=buscar_palabra_simple(i)
+        res= primera.interseccion(actual)
+    return res
 
 def procesar_url_en_indice_top_n(url: str, texto: str, indice: dict[str, set[str]], top_n: int=1000):
     """
